@@ -27,15 +27,6 @@ ins_chatbot_api/
 
 **`app/api_ins_chatbot.py`** builds one `TermStore`/`Dispatcher` at startup (not per request) and defines the three endpoints described above. **`app/models.py`** is what gives FastAPI its automatic request validation and the `/docs` page. **`app/auth.py`** reads the expected key from `API_KEY` at request time, not at startup, so rotating it is just an env var change + redeploy. **`app/sessions.py`** is deliberately simple — see "Known limitations" below.
 
-### Testing locally with Postman
-
-Import `postman_collection.json` into Postman. It ships three collection variables (`base_url`, `api_key`, `session_id`) defaulting to `http://localhost:8000` / `local-test-key` — edit `api_key` if your local `.env` uses a different value. Requests, meant to be run in order:
-
-1. **Health check** — `GET /health` sanity check.
-2. **Start session** — has a test script attached that automatically saves the returned `session_id` into the collection variable, so nothing needs copy-pasting.
-3. **Chat — what is ACV** / **Chat — give me an example** — both reference `{{session_id}}` already; the second one exercises multi-turn state (a follow-up that doesn't repeat the term name).
-4. **Session — no API key (expect 401)** — sends no `X-API-Key` header on purpose, to confirm auth actually rejects it.
-
 ## Running locally
 
 ```bash
