@@ -1,0 +1,5 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.32,<1
+slowapi>=0.1.9,<1
+pydantic>=2.13,<3
+paco-insurance-chatbot @ git+https://github.com/pacordev/paco_insurance_chatbot.git@main

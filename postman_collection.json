@@ -1,0 +1,92 @@
+{
+  "info": {
+    "name": "ins_chatbot_api (local)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "api_key", "value": "local-test-key" },
+    { "key": "session_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "Start session",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "pm.collectionVariables.set('session_id', body.session_id);",
+              "pm.test('got a session_id', () => pm.expect(body.session_id).to.be.a('string'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-API-Key", "value": "{{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Paco\",\n  \"is_newcomer\": false\n}"
+        },
+        "url": { "raw": "{{base_url}}/session", "host": ["{{base_url}}"], "path": ["session"] }
+      }
+    },
+    {
+      "name": "Chat — what is ACV",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-API-Key", "value": "{{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"message\": \"what is ACV\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/chat", "host": ["{{base_url}}"], "path": ["chat"] }
+      }
+    },
+    {
+      "name": "Chat — give me an example",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "X-API-Key", "value": "{{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"message\": \"give me an example\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/chat", "host": ["{{base_url}}"], "path": ["chat"] }
+      }
+    },
+    {
+      "name": "Session — no API key (expect 401)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Paco\",\n  \"is_newcomer\": false\n}"
+        },
+        "url": { "raw": "{{base_url}}/session", "host": ["{{base_url}}"], "path": ["session"] }
+      }
+    }
+  ]
+}

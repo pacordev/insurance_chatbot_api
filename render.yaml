@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: ins-chatbot-api
+    runtime: python
+    plan: free
+    healthCheckPath: /health
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.api_ins_chatbot:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.4
+      - key: API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: "*"
